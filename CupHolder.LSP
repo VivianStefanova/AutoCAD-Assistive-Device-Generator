@@ -6,9 +6,25 @@
 (load "C:/Pinky/VlaUtils.lsp")
 
 ; MAIN FUNCTION    ; the main function that calls the dialog window
-(defun C:CUPHOLDER ( / dcl_id result dir list1 list2 list6
+(defun C:CUPHOLDER ( / dcl_id result dir list1 list2 list6 c1_wallThickness c2_Boffset c5 c6 c8 c9
 		    baseProfile fig ps1 c3 c4 height c7_Toffset selectionu1 selectionu1_1 Holder2)
-  (setq mSpace (getModelSpace)) 						; get Model Space for vla-functions 
+  (setq mSpace (getModelSpace)) 						; get Model Space for vla-functions
+
+  				;Constant dimensions - Constans
+  (setq c1_wallThickness 3.5 	;Wall thickness        		                                            c1
+	c2_Boffset 8.0       	    ;Bottom ring thickness 	                                       	    c2
+	c3 1.5			;									    c3
+	c4 5.0   		;Handle path extension into the cup	                                    c4
+	c5 3.5			;									    c5
+	c6 3.5			;									    c6
+	c7_Toffset 8.0  ;Distance from the upper edge of the cup for drinking	                            c7
+	c8 40.0			;									    c8
+	c9 3.0			;									    c9
+	)
+
+
+
+  
   (setq dcl_id (load_dialog DialogPath))  					; Load DCL file 
   (if (not (new_dialog "CupDialog" dcl_id)) (progn (alert "Cannot load dialog.") (exit)))
 (start_list "handle_type") (mapcar 'add_list '("Triangle" "Oval" "Rectangle")) (end_list)  	 
@@ -32,29 +48,29 @@
 
   
   (if (= result 1) (progn 									; Process result
-	(agregateValues)										;Calculates points for 2D geometry
-	(SetRealisticView)										;Changes the view to isometric
-	(drawLWPoly list1 1)										;Draws a closed contour for the outer part of the holder
-	(UT_revolve mSpace (list baseProfile) (list 0.0 0.0) (list 0.0 100.0) 360.0)			;Revoves the contour
-	(setq selectionu1_1 (ssadd (entlast)))
-	(drawLWPoly list2 1)										;Draws a closed contour for the cup's body
-	(UT_revolve mSpace (list baseProfile) (list 0.0 0.0) (list 0.0 100.0) 360.0)			;Revoves the contour
-	(setq subSS_1 (ssadd (entlast)))   
-	(cut_holder_poly list6)										;Draws a closed contour for cutting the handle slot
-	(setq fig (entlast))
-	(UT_extrude mSpace (list fig) (* (atof upperDiamVal) 2.0))					;Extrudes the closed contour and creates a 3D Solid
-	(UT_move3D (ssadd (entlast)) (list 0.0 0.0 0.0) (list 0.0 0.0 (- (atof upperDiamVal))))		;Moves the 3D Solid along the Z axis
-	(setq subSS (ssadd (entlast) subSS_1))
-	    
-	(setq ps1 (list (- (car (nth 1 list2)) c4) (+ (cadr (nth 1 list2)) c3)) ps2 (car (mirror-points-y (list ps1)))) ;Starting points for the handles
-	(handles_n ps1 ps2) 										;Program for drawing the handles
-	(UT_union selectionu1)  									;Combines the objects
-	(UT_subtract selectionu1_1 subSS)								;Subtracts the objects
-	(setq Holder2 (ssadd)) (ssadd (ssname selectionu1_1 0) Holder2)
-	(UT_rotate3D Holder2 (list 0.0 0.0 0.0) (list 20.0 0.0 0.0) 90.0)    			;Rotates the finished cup holder to make it upright
+    (agregateValues)										;Calculates points for 2D geometry
+(SetRealisticView)										;Changes the view to isometric
+(drawLWPoly list1 1)										;Draws a closed contour for the outer part of the holder
+(UT_revolve mSpace (list baseProfile) (list 0.0 0.0) (list 0.0 100.0) 360.0)			;Revoves the contour
+(setq selectionu1_1 (ssadd (entlast)))
+(drawLWPoly list2 1)										;Draws a closed contour for the cup's body
+(UT_revolve mSpace (list baseProfile) (list 0.0 0.0) (list 0.0 100.0) 360.0)			;Revoves the contour
+(setq subSS_1 (ssadd (entlast)))   
+(cut_holder_poly list6)										;Draws a closed contour for cutting the handle slot
+(setq fig (entlast))
+(UT_extrude mSpace (list fig) (* (atof upperDiamVal) 2.0))					;Extrudes the closed contour and creates a 3D Solid
+(UT_move3D (ssadd (entlast)) (list 0.0 0.0 0.0) (list 0.0 0.0 (- (atof upperDiamVal))))		;Moves the 3D Solid along the Z axis
+(setq subSS (ssadd (entlast) subSS_1))
+    
+(setq ps1 (list (- (car (nth 1 list2)) c4) (+ (cadr (nth 1 list2)) c3)) ps2 (car (mirror-points-y (list ps1))));Starting points for the handles
+(handles_n ps1 ps2) 										;Program for drawing the handles
+(UT_union selectionu1)  									;Combines the objects
+(UT_subtract selectionu1_1 subSS)								;Subtracts the objects
+(setq Holder2 (ssadd)) (ssadd (ssname selectionu1_1 0) Holder2)
+(UT_rotate3D Holder2 (list 0.0 0.0 0.0) (list 20.0 0.0 0.0) 90.0)    			;Rotates the finished cup holder to make it upright
 
-	(if (=  pod_stl1 "1") (progn (setq dfil (getfiled "Select A Directory" "C:/Pinky/stl/CupHolder1" "stl" (+ 1 2)))
-	(setvar "FACETRES" 10.0) (setvar 'FILEDIA 0) (vl-cmdf "_.STLOUT" selectionu1_1 "" "_Y" dfil) (setvar 'FILEDIA 1)));Saves the STL file
+(if (=  pod_stl1 "1") (progn (setq dfil (getfiled "Select A Directory" "C:/Pinky/stl/CupHolder1" "stl" (+ 1 2)))
+(setvar "FACETRES" 10.0) (setvar 'FILEDIA 0) (vl-cmdf "_.STLOUT" selectionu1_1 "" "_Y" dfil) (setvar 'FILEDIA 1)));Saves the STL file
     );end progn
 );end if
    (vl-cmdf "_.zoom" "_extents")
@@ -80,46 +96,42 @@
 ; INPUT VALIDATION
 ; Validates the given inputs, returns true if everything is fine
 (defun ValidateInputs ( / h l u cw cb ct hs)
-  (setq h  (atof (get_tile "cup_height")))
-  (setq l  (atof (get_tile "lower_dia")))
-  (setq u  (atof (get_tile "upper_dia")))
-  (setq cutW (atof (get_tile "cut_width")))
-  (setq cutB (atof (get_tile "cut_bottom_dist")))
-  (setq Lh (atof (get_tile "handle_size")))
+
+(print handleTypeVal) 
+  (setq h  (atof (get_tile "cup_height"))
+   	l  (atof (get_tile "lower_dia"))
+  	u  (atof (get_tile "upper_dia"))
+  	cutW (atof (get_tile "cut_width"))
+  	cutB (atof (get_tile "cut_bottom_dist"))
+  	Lh (atof (get_tile "handle_size")))
+  (cond ((= handleThicknessVal "0") (setq b 6.0 a 10.0 Rs 3.0))
+((= handleThicknessVal "1") (setq b 7.0 a 12.0 Rs 3.0))
+((= handleThicknessVal "2") (setq b 8.0 a 15.0 Rs 3.0)))
   (cond
- ((or (< h 100) (> h 180)) (progn (alert "Cup height (H) must be between 100mm and 180mm!") (mode_tile "cup_height" 2)) nil)			 		; height between 5 and 30 cm
- ((or (< l 40) (> l 150)) (progn (alert "Lower diameter (DL) out of range. Must be between 40mm and 150mm!") (mode_tile "lower_dia" 2)) nil) 		; upper and lower diameter between 3 and 15 cm
- ((or (< Lh 55) (> Lh 160)) (progn (alert "Lh must be between 55mm and 160mm!") (mode_tile "handle_size" 2)) nil)			 		; height between 5 and 30 cm
- ((or (< u 40) (> u 150)) (progn (alert "Upper diameter (DU) out of range. Must be between 40mm and 150mm!") (mode_tile "upper_dia" 2)) nil)    		; upper diameter => lower diameter
+ ((or (< h 100.0) (> h 180.0)) (progn (alert "Cup height (H) must be between 100mm and 180mm!") (mode_tile "cup_height" 2)) nil)			 		; height between 5 and 30 cm
+ ((or (< l 50.0) (> l 90.0)) (progn (alert "Lower diameter (DL) out of range. Must be between 50mm and 90mm!") (mode_tile "lower_dia" 2)) nil) 		; upper and lower diameter between 3 and 15 cm
+ ((or (< Lh 55) (> Lh 90.0)) (progn (alert "Lh must be between 55mm and 90mm!") (mode_tile "handle_size" 2)) nil)			 		; height between 5 and 30 cm
+ ((or (< u 50.0) (> u 90.0)) (progn (alert "Upper diameter (DU) out of range. Must be between 50mm and 90mm!") (mode_tile "upper_dia" 2)) nil)    		; upper diameter => lower diameter
  ((or (< cutB 10) (> cutB 50)) (progn (alert "Distance From Bottom (HL) out of range. Must be between 10mm and 50mm!") (mode_tile "cut_bottom_dist" 2)) nil)    		; upper diameter => lower diameter
- ((or (< cutW 5) (> cutW 25)) (progn (alert "Width (L) out of range. Must be between 5mm and 25mm!") (mode_tile "cut_width" 2)) nil)    		; upper diameter => lower diameter
+ ((or (< cutW 10) (> cutW 25)) (progn (alert "Width (L) out of range. Must be between 10mm and 25mm!") (mode_tile "cut_width" 2)) nil)    		; upper diameter => lower diameter
  ((< u l) (progn (alert "Upper diameter must be larger than or equal to lower diameter!") (mode_tile "upper_dia" 2)) nil)
-    (T T)
-  )
+((and (= handleTypeVal "1") (< Lh  (+ (* (- h c3 c3 b) 0.5) c4))) (progn (alert "Error. Increase Lh or decrease H.")
+							    (mode_tile "handle_size" 2)) nil)
+   (T T)
+  ) 
 );end of defun : ValidateInputs
 
 ; SETTING THE VALUES  ; sets the global values with the agregated values from the dialog window
-(defun agregateValues ( / c1_wallThickness c2_Boffset delta_path_handle  
+(defun agregateValues ( / delta_path_handle  
 		       diam1U diam2L p0 p01 p02 p03 p04 angh p05 p06 p1a p2a p1 p2 p3 p4
-		       Hhandle whit_C p30a p31a p35 P34 P33a P33 P32 list4 list5 c5 c6 c8 c9)
-  				;Constant dimensions - Constans	
-  (setq c1_wallThickness 3.5 	;Wall thickness         					c1
-	c2_Boffset 8.0       	;Bottom ring thickness 						c2
-	c3 1.5			;									c3
-	c4 5.0   		;Handle path extension into the cup 					c4
-	c5 3.5			;									c5
-	c6 3.5			;									c6
-	c7_Toffset 8.0      	; Distance from the upper edge of the cup for drinking	c7
-	c8 40.0			;									c8
-	c9 3.0			;									c9
-	)
+		       Hhandle whit_C p30a p31a p35 P34 P33a P33 P32 list4 list5)
    						;;Parameters
-  (setq diam1U (atof upperDiamVal)		;Large diameter - upper 
+(setq diam1U (atof upperDiamVal)		;Large diameter - upper 
 	diam2L (atof lowerDiamVal)		; Small diameter - lower
 	height (atof heightVal)			; Cup height
 	)
-;Points for holder 1 - outer 
-;Points for the outer and inner contours of the cup holder
+;;;  Points for holder 1 - outer 
+;;;  Точки за външния и вътрешен контур на държача за чаша
   (setq p0 (list 0.0 0.0)
 	p01 (polar p0 (/ pi 2.0) c1_wallThickness)
 	p02 (polar p01 0.0 (/ diam2L 2.0))
@@ -195,6 +207,7 @@ list6 (append list4 (reverse list5))
 
 
 ; 1. Function for drawing a rectangle with rounded corners (fillet)
+
 (defun RECab (points h b r / p0 p1 p2 p3 p4 p5 p6 p7 p8 cls) 
 (setq   p1 (polar (polar points (/ pi 2.0) (/ h 2)) pi (- (/ b 2.0) r))
   	p2 (polar (polar p1 pi r) (- (/ pi 2.0)) r)
@@ -373,6 +386,11 @@ bulgehandle1 (GetBulge (nth 1 listpointhm) (nth 2 listpointhm) (/ (distance (nth
 
 ; 2. Function that draws a polyline using entmakex.
 ;Requires lst - a list of points, and cls 1 - for a closed polyline or 0 - for an open polyline
+																																		  
+																																		  
+											 
+																					   
+																																						   
 (defun drawLWPoly (lst cls / )
 (setq baseProfile (entmakex (append (list (cons 0 "LWPOLYLINE") (cons 100 "AcDbEntity") (cons 100 "AcDbPolyline")
                          (cons 90 (length lst)) ;if there are 5 points this will be (90 . 5)
@@ -406,6 +424,8 @@ bulgehandle1 (GetBulge (nth 1 listpointhm) (nth 2 listpointhm) (/ (distance (nth
 
 
 ;7. Extrudes the handle profile along a path
+
+																																					  
 (defun SweepPline (entProf entPath / acadObj activeDoc blockObj objProf objPath regionList objRegion objSolid)
   (setq acadObj (vlax-get-acad-object) activeDoc (vla-get-activedocument acadObj))
   ;Correctly determine the current model space
@@ -441,4 +461,3 @@ bulgehandle1 (GetBulge (nth 1 listpointhm) (nth 2 listpointhm) (/ (distance (nth
   (princ));; end of defun : SweepPline
 
 ;;;(alert "C:CupHolder  program is loaded. \n\nWrite CupHolder in the console to start it.")
-
