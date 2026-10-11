@@ -9,8 +9,8 @@ Pinky2 : dialog {label = "Assistive device - Pinky; Dialog 1";
   : list_box { label = "Select profile:"; key = "file_list_1"; width = 5; edit_width = 5; height = 5;}
   }
   : column {   
-  : button { label = "Delete record"; key = "delete_record"; width = 5;}
-  : list_box { label = "Record name:"; key = "file_list_2"; width = 5; edit_width = 5; height = 5;}
+  : button { label = "delete record"; key = "delete_record"; width = 5;}
+  : list_box { label = "record name:"; key = "file_list_2"; width = 5; edit_width = 5; height = 5;}
   }}
   : row {
     : text { label = "Creation date:"; key = "note_box"; edit_width = 10; }
@@ -36,17 +36,17 @@ Pinky : dialog {key = "Pinky"; label = "Assistive device - Pinky; Dialog 2";
    : boxed_column { label = "Left finger:";
 : row {
     : edit_box { key = "Rad1"; edit_width = 3; fixed_width = true; label = "Radius R1:";}
-    : edit_box { key = "a1"; edit_width = 3; fixed_width = true; label = "Distance d1:";}
+    : edit_box { key = "a1"; edit_width = 3; fixed_width = true; label = "distance d1:";}
 }
 : row {
     : edit_box { key = "ang11"; edit_width = 3; fixed_width = true; label = "Angle a1:";}
     : edit_box { key = "ang12"; edit_width = 3; fixed_width = true; label = "Angle a2:";}
 }}
 : boxed_column {
-  label = "Right finger:";
+  label = "Raight finger:";
   : row {
     : edit_box { key = "Rad2"; edit_width = 3; fixed_width = true; label = "Radius R2:";}
-    : edit_box { key = "a2"; edit_width = 3; fixed_width = true; label = "Distance d2:";}
+    : edit_box { key = "a2"; edit_width = 3; fixed_width = true; label = "distance d2:";}
     }
     : edit_box { key = "ang22"; edit_width = 3; fixed_width = true; label = "Angle a3:";}
     }}
@@ -59,15 +59,15 @@ Pinky : dialog {key = "Pinky"; label = "Assistive device - Pinky; Dialog 2";
      : button {key = "Back1"; label = "<< &Back"; width = 11;}
      : button { label = "&Next >>"; key = "accept"; width = 6; is_default = true; }
     }
-}//MyEditBoxes
+}
 
 
 ///Dialog_3									Dialog_3   
 Pinky1 : dialog {label = "Assistive device - Pinky; Dialog 3";
- : boxed_row {label = "Tools to be attached:";
+ : boxed_row {label = "tools:";
  : list_box {key = "Block1"; height = 5; fixed_height = true; width = 17; fixed_width = true;}
 : column {
- : toggle {key = "Tog_real"; label = "Realistic view";}
+ : toggle {key = "Tog_real"; label = "realistic view";}
  : toggle {key = "Toggtext"; label = "3D texture";}
       }}
 : boxed_row {
@@ -92,7 +92,7 @@ Pinky1 : dialog {label = "Assistive device - Pinky; Dialog 3";
 
 ///Dialog_4									Dialog_4   
 Pinky4 : dialog {label = "Pinky; Dialog 4";
-    : edit_box { label = "Account name:"; key = "Name_of_ak";}
-  : edit_box { label = "Record name:"; key = "Name_of_exp";}
+    : edit_box { label = "Acount name:"; key = "Name_of_ak";}
+  : edit_box { label = "New name:"; key = "Name_of_exp";}
       ok_cancel;
   }
