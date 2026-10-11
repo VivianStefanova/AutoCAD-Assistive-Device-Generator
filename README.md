@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The following two AutoCAD programs demonstrate how parametric modeling can be used to create assistive devices for people with hand disabilities.
+The following two AutoCAD programs demonstrate how parametric modeling can be used to create assistive devices for people with reduced hand dexterity.
 
 The programs introduce two types of assistive devices:
 
