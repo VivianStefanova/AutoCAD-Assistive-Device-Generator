@@ -9,6 +9,6 @@ CupDialog : dialog {key = "CupDialog";label = "Cup Holder Generator";
   : edit_box {key = "cup_height";label = "Height, H[mm]:";edit_width = 4;fixed_width = true;}
   : edit_box {key = "lower_dia";label = "Lower Diameter, DL[mm]:";edit_width = 4;fixed_width = true;}
   : edit_box {key = "upper_dia";label = "Upper Diameter, DU[mm]:";edit_width = 4;fixed_width = true;}
-  : edit_box {key = "cut_width";label = "Cup Handle Width, L[mm]:";edit_width = 4;fixed_width = true;}
-  : edit_box {key = "cut_bottom_dist";label = "Distance From Bottom to Handle, HL[mm]:";edit_width = 4;fixed_width = true;}}
+  : edit_box {key = "cut_width";label = "Width, L[mm]:";edit_width = 4;fixed_width = true;}
+  : edit_box {key = "cut_bottom_dist";label = "Distance From Bottom, HL[mm]:";edit_width = 4;fixed_width = true;}}
 } ok_cancel;}
